@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+
+# Show that the naive-softmax loss given in Equation (2) is the same as the cross-entropy loss
+# between y and yˆ where y is one hot vector and y^ is probability 
+# show that cross entropy loss = naive softmax
+# since that cross entropy loss = sum -y*log(y^) and y is one hot encoding of the word zeros and one 1 so it will be -log(y^)
+
 import numpy as np
 import random
 
@@ -18,6 +24,7 @@ def sigmoid(x):
 
     ### YOUR CODE HERE
     s=(1)/(1+np.exp(-x))
+
     ### END YOUR CODE
 
     return s
@@ -57,6 +64,28 @@ def naiveSoftmaxLossAndGradient(
     ### Please use the provided softmax function (imported earlier in this file)
     ### This numerically stable implementation helps you avoid issues pertaining
     ### to integer overflow. 
+
+    # naive softmax loss
+
+    voc_len=len(outsideVectors)
+
+    voc_sum_exp=0
+    for i in range(voc_len):   
+      current_word_vec=outsideVectors[i]
+      dot_product=np.dot(centerWordVec,current_word_vec)
+      voc_sum_exp += np.exp(dot_product)
+
+    center_context=np.dot(centerWordVec, outsideVectors[outsideWordIdx])
+    center_context=np.exp(center_context)
+
+    conditional_prob= center_context/voc_sum_exp
+
+    loss= - np.log(conditional_prob)
+
+
+    # https://stats.stackexchange.com/questions/253244/gradients-for-skipgram-word2vec
+    # gradient vector with respect to center word
+
 
 
     ### END YOUR CODE
