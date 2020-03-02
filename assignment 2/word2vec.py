@@ -30,6 +30,7 @@ def sigmoid(x):
     return s
 
 
+
 def naiveSoftmaxLossAndGradient(
     centerWordVec,
     outsideWordIdx,
@@ -71,7 +72,9 @@ def naiveSoftmaxLossAndGradient(
 
     # U(word embedding ) * Vc 
     softmax_logits= np.matmul(outsideVectors,centerWordVec)
+
     probabilty_all_word=softmax(softmax_logits)
+  
 
     # the index of the outside word in the embedding matrix is the same as in the probabilty vector 
 
@@ -79,12 +82,18 @@ def naiveSoftmaxLossAndGradient(
 
     # Gradient with respect to vc  embedding_matrix *(y^-y)
 
+
     y_hat=probabilty_all_word
 
-    one_hot_encoding=np.zeros((voc_len,1))
-    y=np.put(one_hot_encoding,outsideWordIdx,1)
+    y=np.zeros((voc_len))
+    np.put(y,outsideWordIdx,1)
+    
+    # print(outsideVectors)
+   
 
-    gradCenterVec=np.matmul(  outsideVectors, (y_hat-y))
+    gradCenterVec=np.matmul(  outsideVectors.T, 
+                            (y_hat-y) )
+
 
     # Gradient with respect to outside_vector
 
@@ -95,6 +104,22 @@ def naiveSoftmaxLossAndGradient(
     ### END YOUR CODE
 
     return loss, gradCenterVec, gradOutsideVecs
+
+
+
+def getNegativeSamples(outsideWordIdx, dataset, K):
+    """ Samples K indexes which are not the outsideWordIdx """
+
+    negSampleWordIndices = [None] * K
+    for k in range(K):
+        newidx = dataset.sampleTokenIdx()
+        while newidx == outsideWordIdx:
+            newidx = dataset.sampleTokenIdx()
+        negSampleWordIndices[k] = newidx
+    return negSampleWordIndices
+
+
+
 
 def negSamplingLossAndGradient(
     centerWordVec,
@@ -127,18 +152,19 @@ def negSamplingLossAndGradient(
     ### Please use your implementation of sigmoid in here.
     
     output_list=list()
-
+    gradOutsideVecs=np.zeros(outsideVectors.shape)
     sig_center_outside=sigmoid( np.dot( centerWordVec,outsideVectors[outsideWordIdx] ) )
 
     gradCenterVec= -outsideVectors[outsideWordIdx]*(1-sig_center_outside)
+    gradOutsideVecs[outsideWordIdx] = centerWordVec*(sig_center_outside-1)
 
 
-    for i in range(k):
+    for i in range(K):
 
       sample_index=indices[i+1]
       sample_vec = outsideVectors[sample_index]
       dot_product=np.dot(sample_vec,centerWordVec)
-      out_sig=sigmoid(dot_product)
+      out_sig=sigmoid(-1*dot_product)
       output_list.append( out_sig)
 
       gradCenterVec += sample_vec * ( 1 - out_sig )
@@ -160,6 +186,9 @@ def negSamplingLossAndGradient(
     ### END YOUR CODE
 
     return loss, gradCenterVec, gradOutsideVecs
+
+
+
 
 
 def skipgram(currentCenterWord, windowSize, outsideWords, word2Ind,
@@ -220,6 +249,8 @@ def skipgram(currentCenterWord, windowSize, outsideWords, word2Ind,
     ### END YOUR CODE
 
     return loss, gradCenterVecs, gradOutsideVectors
+
+
 
 #############################################
 # Testing functions below. DO NOT MODIFY!   #
