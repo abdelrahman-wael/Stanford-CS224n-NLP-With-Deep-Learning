@@ -162,7 +162,6 @@ def negSamplingLossAndGradient(
     return loss, gradCenterVec, gradOutsideVecs
 
 
-
 def skipgram(currentCenterWord, windowSize, outsideWords, word2Ind,
              centerWordVectors, outsideVectors, dataset,
              word2vecLossAndGradient=naiveSoftmaxLossAndGradient):
@@ -199,6 +198,24 @@ def skipgram(currentCenterWord, windowSize, outsideWords, word2Ind,
     gradOutsideVectors = np.zeros(outsideVectors.shape)
 
     ### YOUR CODE HERE
+
+    center_word_index=word2Ind[currentCenterWord]
+    center_word_vec=centerWordVectors[center_word_index]
+
+    for outside_word in outsideWords:
+
+      outside_word_index= word2Ind[outside_word]
+      loss_from_1_word, grad_center_word, grad_outside= word2vecLossAndGradient(centerWordVec=center_word_vec,
+            outsideWordIdx=outside_word_index,outsideVectors=outsideVectors,dataset=dataset)
+      loss += loss_from_1_word
+
+      
+      gradCenterVecs[center_word_index] += grad_center_word
+
+      gradOutsideVectors += grad_outside
+
+
+
 
     ### END YOUR CODE
 
