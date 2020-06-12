@@ -1,1 +1,4 @@
-*.es linguist-language=Shell
+assignment 4/en_es_data/dev.es linguist-vendored
+assignment 4/sanity_check_en_es_data/dev_sanity_check.es linguist-vendored
+assignment 4/sanity_check_en_es_data/test_sanity_check.es linguist-vendored
+assignment 4/sanity_check_en_es_data/train_sanity_check.es linguist-vendored
