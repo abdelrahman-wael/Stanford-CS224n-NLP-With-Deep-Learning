@@ -1,4 +1,5 @@
-assignment 4/en_es_data/dev.es linguist-vendored
-assignment 4/sanity_check_en_es_data/dev_sanity_check.es linguist-vendored
-assignment 4/sanity_check_en_es_data/test_sanity_check.es linguist-vendored
-assignment 4/sanity_check_en_es_data/train_sanity_check.es linguist-vendored
+*.py linguist-detectable=true
+*.ipny linguist-detectable=true
+*.js linguist-detectable=false
+*.es linguist-detectable=false
+*.sh linguist-detectable=false
