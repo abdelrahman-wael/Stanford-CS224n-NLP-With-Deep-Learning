@@ -1,2 +1,2 @@
 # NMT Assignment
-Note: Heavily inspired by the https://github.com/pcyin/pytorch_nmt repository
+The goal is to translate from Spanish to English using lstm and attention module.
